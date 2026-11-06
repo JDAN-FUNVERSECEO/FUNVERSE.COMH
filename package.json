@@ -1,0 +1,13 @@
+{
+  "name": "funverse",
+  "version": "0.1.0",
+  "private": true,
+  "description": "FUNVERSE con FUNSISTANT local",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "matter-js": "0.20.0",
+    "nodemailer": "^10.3.1"
+  }
+}

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#061943">
+  <meta name="description" content="Habla con FUNSISTANT, tu compa de FUNVERSE.">
+  <title>Chat con FUNSISTANT — FUNVERSE</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="style.css">
+  <script src="chat.js" defer></script>
+</head>
+<body class="chat-page-body">
+  <div class="chat-page-root">
+    <header class="topbar chat-topbar">
+      <a class="brand" href="/#inicio" aria-label="FUNVERSE, inicio"><span class="brand-mark" aria-hidden="true"></span><span>FUN<span class="brand-light">VERSE</span></span></a>
+      <nav class="chat-navigation" aria-label="Navegación de chat"><a href="/#explora">Juegos</a><a href="/#evento-semanal">Eventos</a><a class="chat-nav-active" href="/chat.html">Chat</a></nav>
+      <a class="top-cta" href="/#inicio">Volver a FUNVERSE <span>↗</span></a>
+    </header>
+    <main class="chat-layout">
+      <aside class="chat-sidebar">
+        <div class="chat-sidebar-brand"><span class="chat-sidebar-icon">✦</span><div><b>CHAT GALÁCTICO</b><small>Tu espacio con FUNSISTANT</small></div></div>
+        <button class="chat-new-button" id="chat-clear" type="button">＋ Nueva conversación</button>
+        <div class="chat-sidebar-tip"><b>Un compa, muchas ideas</b><p>Pídele ayuda con los juegos, Roblox Studio, programación, historias o música original.</p></div>
+        <div class="chat-sidebar-note">🔒 Tus mensajes se guardan solo en este navegador. No son un chat público ni se envían a otros usuarios.</div>
+      </aside>
+      <section class="chat-main" aria-labelledby="chat-title">
+        <div class="chat-main-heading"><div><span class="eyebrow">FUNSISTANT · FUN 2.1 UNIVERSE</span><h1 id="chat-title">¡Qué gusto verte!</h1><p>¿Qué aventura o idea traes hoy?</p></div><label class="chat-mode-label" for="chat-mode">MODO<select id="chat-mode"><option value="fun">FUN · Diversión</option><option value="gamer">GAMER · Videojuegos</option><option value="smart">SMART · Curiosidades</option><option value="coder">CODER · Programación</option><option value="teacher">TEACHER · Aprender</option><option value="creative">CREATIVE · Ideas</option><option value="music">MUSIC · Música original</option><option value="roleplay">ROLEPLAY · Historias</option><option value="coder-pro" disabled>FUN-CODER 3.8 ASTRA · Bloqueado</option></select></label></div>
+        <div class="chat-transcript" id="chat-transcript" role="log" aria-live="polite" aria-relevant="additions text"></div>
+        <div class="chat-suggestions" id="chat-suggestions"><button type="button" data-prompt="Dame una idea divertida para jugar en FUNVERSE">🎮 Dame una idea de juego</button><button type="button" data-prompt="Ayúdame a crear un personaje para una aventura espacial">✨ Inventemos un personaje</button><button type="button" data-prompt="Enséñame algo sencillo de Roblox Studio">🚀 Aprende algo nuevo</button></div>
+        <form class="chat-composer" id="chat-form"><label class="sr-only" for="chat-input">Escribe un mensaje para FUNSISTANT</label><textarea id="chat-input" rows="2" maxlength="1000" placeholder="Escribe tu mensaje aquí…" autocomplete="off" required></textarea><button id="chat-send" type="submit" aria-label="Enviar mensaje">➤</button></form>
+        <div class="chat-footer"><span id="chat-status" role="status" aria-live="polite">Conectando con FUNSISTANT…</span><span>No escribas contraseñas, datos personales ni información privada.</span></div>
+      </section>
+    </main>
+    <section class="announcement-banner chat-announcement" id="chat-announcement" aria-live="polite" hidden><img class="announcement-avatar" src="/assets/danzok-avatar.png" alt="DANZOK"><div class="announcement-content"><span class="announcement-byline">DANZOK</span><p id="chat-announcement-body"></p></div><span class="announcement-new">NUEVO</span></section>
+    <div class="chat-event-live" id="chat-event-live" hidden><img class="event-live-avatar" src="/assets/danzok-avatar.png" alt=""><span class="event-live-copy"><b>DANZOK</b><small id="chat-event-text">ADMIN ABUSE EN VIVO</small></span></div>
+  </div>
+</body>
+</html>
