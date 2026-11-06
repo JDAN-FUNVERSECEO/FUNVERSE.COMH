@@ -1,4 +1,5 @@
 {
+  "$schema": "https://funverse.osolopez.one",
   "name": "funversecom",
   "main": "src/worker.js",
   "compatibility_date": "2026-11-05",
