@@ -16,3 +16,6 @@ README.md
 wrangler.jsonc
 .assetsignore
 *.gguf
+
+assets/*.jinja
+assets/FUN-CODER-MODEL.md
