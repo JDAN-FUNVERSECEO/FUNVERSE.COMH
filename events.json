@@ -1,0 +1,17 @@
+{
+  "weeklyEnabled": true,
+  "durationMinutes": 90,
+  "effect": "rainbow",
+  "effects": [
+    "rainbow",
+    "ufo",
+    "party-chaos"
+  ],
+  "music": "Beyond_The_Door.mp3",
+  "manualEvent": null,
+  "announcement": null,
+  "announcementEventId": "2026-11-06T16:43:15.294Z",
+  "seasonalEvents": [],
+  "updatedAt": "2026-11-06T17:09:58.449Z",
+  "updatedBy": "jorge@albaitero.com"
+}

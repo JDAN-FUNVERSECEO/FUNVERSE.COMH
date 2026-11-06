@@ -1,0 +1,35 @@
+{
+  "friends": [
+    {
+      "userA": "daniel.lopez.a@gmail.com",
+      "userB": "jorge@albaitero.com",
+      "createdAt": "2026-11-06T17:06:06.874Z"
+    }
+  ],
+  "requests": [
+    {
+      "id": "4f69d889-13ab-432a-9fb7-a7bd77072e18",
+      "from": "daniel.lopez.a@gmail.com",
+      "to": "jorge@albaitero.com",
+      "status": "accepted",
+      "createdAt": "2026-11-06T17:04:59.844Z",
+      "updatedAt": "2026-11-06T17:06:06.874Z"
+    }
+  ],
+  "messages": [
+    {
+      "id": "f5f0a585-4550-49b9-b288-90bf1b9c2a8f",
+      "from": "jorge@albaitero.com",
+      "to": "daniel.lopez.a@gmail.com",
+      "text": "hola",
+      "createdAt": "2026-11-06T17:06:13.905Z"
+    },
+    {
+      "id": "404615b1-2961-416e-9450-6390241bd681",
+      "from": "daniel.lopez.a@gmail.com",
+      "to": "jorge@albaitero.com",
+      "text": "hola como esta",
+      "createdAt": "2026-11-06T17:06:28.805Z"
+    }
+  ]
+}

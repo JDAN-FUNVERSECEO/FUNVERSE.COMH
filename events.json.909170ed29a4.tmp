@@ -1,0 +1,19 @@
+{
+  "weeklyEnabled": true,
+  "durationMinutes": 90,
+  "effect": "spotlight",
+  "manualEvent": {
+    "startedAt": "2026-11-06T15:53:31.337Z",
+    "endsAt": "2026-11-06T17:23:31.337Z",
+    "effect": "spotlight"
+  },
+  "announcement": {
+    "title": "ADMIN ABUSE EN VIVO",
+    "body": "¡DANZOK inició la fiesta! Recoge las estrellas y gana hasta 100 XP durante esta sesión.",
+    "publishedAt": "2026-11-06T15:53:31.337Z",
+    "expiresAt": "2026-11-06T15:53:41.337Z"
+  },
+  "announcementEventId": "2026-11-06T15:53:31.337Z",
+  "updatedAt": "2026-11-06T15:53:31.337Z",
+  "updatedBy": "jorge@albaitero.com"
+}

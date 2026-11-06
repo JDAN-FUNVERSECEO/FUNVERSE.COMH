@@ -2,7 +2,7 @@
   "name": "funverse",
   "version": "0.1.0",
   "private": true,
-  "description": "FUNVERSE con FUNSISTANT local",
+  "description": "FUNVERSE: juegos, música, creatividad y programación",
   "scripts": {
     "start": "node server.js"
   },

@@ -16,15 +16,15 @@
         <img class="admin-brand-icon" src="/assets/funverse-astronaut.svg" alt="">
         <span class="admin-brand-name">FUNVERSE <b>ADMIN</b></span>
       </a>
-      <span class="admin-live-badge" id="admin-live-badge" data-state="locked"><i></i><span id="admin-top-status">ACCESO OWNER</span></span>
+      <span class="admin-live-badge" id="admin-live-badge" data-state="locked"><i></i><span id="admin-top-status">ACCESO OWNER / ADMIN</span></span>
       <label class="admin-search"><span aria-hidden="true">⌕</span><input id="admin-search" type="search" placeholder="Buscar cuentas…" autocomplete="off" aria-label="Buscar jugadores"></label>
-      <div class="admin-user-chip"><img id="admin-owner-avatar" src="/assets/funverse-astronaut.svg" alt=""><span><b id="admin-owner-name">DANZOK</b><small>OWNER · PROPIETARIO</small></span></div>
+      <div class="admin-user-chip"><img id="admin-owner-avatar" src="/assets/funverse-astronaut.svg" alt=""><span><b id="admin-owner-name">ADMIN</b><small id="admin-role-label">OWNER · PROPIETARIO</small></span></div>
     </header>
 
     <section class="admin-gate" id="admin-gate" hidden>
       <span class="admin-gate-icon" aria-hidden="true">🔒</span>
-      <h1>Centro de control OWNER</h1>
-      <p id="admin-gate-message">Inicia sesión con la única cuenta propietaria de esta instalación.</p>
+      <h1>Centro de control</h1>
+      <p id="admin-gate-message">Inicia sesión con tu cuenta OWNER o ADMIN.</p>
       <form class="admin-login-form" id="admin-login-form">
         <label>Correo de OWNER<input name="email" type="email" autocomplete="username" required></label>
         <label>Contraseña<input name="password" type="password" autocomplete="current-password" required></label>
@@ -43,10 +43,11 @@
           <button data-admin-jump="players" type="button"><span>♙</span> Jugadores</button>
           <button data-admin-jump="games" type="button"><span>▤</span> Juegos</button>
           <button data-admin-jump="moderation" type="button"><span>⬡</span> Moderación</button>
+          <button data-admin-jump="reports" type="button"><span>⚑</span> Denuncias</button>
           <button data-admin-jump="economy" type="button"><span>✦</span> Recompensas</button>
           <button data-admin-jump="events" type="button"><span>⚡</span> Eventos</button>
           <button data-admin-jump="settings" type="button"><span>⚙</span> Apariencia</button>
-          <button data-admin-jump="ai" type="button"><span>✧</span> FUNSISTANT</button>
+
         </nav>
         <div class="admin-sidebar-footer"><span class="admin-sidebar-pulse"></span> Esta instalación es local.<br><small>Solo OWNER puede editarla.</small></div>
       </aside>
@@ -55,26 +56,26 @@
         <section class="admin-dashboard-section" id="overview">
           <article class="admin-hero-card">
             <div class="admin-hero-copy"><span class="admin-eyebrow">PANEL PRIVADO · NIVEL OWNER</span><h1>Centro de<br><span>control.</span></h1><p>¡Administra tu universo!</p><div class="admin-hero-status" id="admin-status" role="status" aria-live="polite">Verificando la cuenta propietaria…</div></div>
-            <span class="admin-hero-orbit" aria-hidden="true">✦</span><img class="admin-hero-avatar" id="admin-hero-avatar" src="/assets/danzok-avatar.png" alt="Avatar de OWNER">
+            <span class="admin-hero-orbit" aria-hidden="true">✦</span><img class="admin-hero-avatar" id="admin-hero-avatar" src="/assets/funverse-astronaut.svg" alt="Avatar del administrador">
           </article>
           <div class="admin-stat-grid">
             <article class="admin-stat-card"><span>CUENTAS REGISTRADAS</span><b id="admin-users-count">—</b><small id="admin-player-section-count">Cuentas de esta instalación</small></article>
             <article class="admin-stat-card stat-purple"><span>CUENTAS SUSPENDIDAS</span><b id="admin-banned-count">—</b><small>Solo OWNER puede moderar</small></article>
             <article class="admin-stat-card"><span>SITIO WEB</span><b id="admin-site-state">Comprobando</b><small id="admin-web-detail">Node · puerto 3000 · local</small></article>
-            <article class="admin-stat-card stat-purple"><span>FUNSISTANT</span><b id="admin-ai-state">Comprobando</b><small id="admin-model-name">FUN 2.1 UNIVERSE</small></article>
+
           </div>
           <div class="admin-overview-grid">
             <article class="admin-panel-card">
               <div class="admin-panel-title"><span>◉</span><div><h2>Estado de servicios</h2><small>Conexiones locales</small></div></div>
               <div class="admin-health-row"><span class="admin-health-icon">🌐</span><span><b>FUNVERSE</b><small id="admin-web-detail-copy">Servidor local · 127.0.0.1:3000</small></span><i class="admin-health-dot" id="admin-health-dot" data-state="offline"></i></div>
-              <div class="admin-health-row"><span class="admin-health-icon">🤖</span><span><b>FUNSISTANT</b><small id="admin-ai-detail">El motor se inicia al usar el chat para evitar congelar la página.</small></span><i class="admin-health-dot" id="admin-ai-health-dot" data-state="offline"></i></div>
-              <p class="admin-honesty-note" id="admin-bridge-detail">127.0.0.1:9931 · conexión local</p>
+
+
             </article>
             <article class="admin-panel-card admin-quick-card">
               <div class="admin-panel-title"><span>⚡</span><div><h2>Accesos rápidos</h2><small>Herramientas de OWNER</small></div></div>
               <button class="admin-quick-action" data-admin-jump="events" type="button"><span>📣</span> Lanzar anuncio o evento</button>
               <button class="admin-quick-action" data-admin-jump="players" type="button"><span>🛡️</span> Administrar cuentas</button>
-              <button class="admin-quick-action" data-admin-jump="ai" type="button"><span>🤖</span> Editar FUNSISTANT</button>
+
             </article>
             <article class="admin-panel-card admin-active-event">
               <div class="admin-panel-title"><span>✦</span><div><h2>ADMIN ABUSE</h2><small>Evento manual</small></div><span class="admin-event-badge" id="admin-event-badge" data-state="idle">EN ESPERA</span></div>
@@ -85,7 +86,7 @@
 
         <section class="admin-dashboard-section admin-section" id="players">
           <div class="admin-section-heading"><div><span class="admin-eyebrow">COMUNIDAD FUNVERSE</span><h2>Jugadores</h2></div><span class="admin-section-count" id="admin-player-section-count-copy">Cuentas locales</span></div>
-          <article class="admin-panel-card"><div class="admin-panel-title"><span>♙</span><div><h3>Cuentas registradas</h3><small>Puedes suspender o reactivar cuentas desde aquí.</small></div></div><div class="admin-users-list" id="admin-users-list"></div><p class="admin-card-status" id="admin-users-status" role="status" aria-live="polite"></p></article>
+          <article class="admin-panel-card"><div class="admin-panel-title"><span>♙</span><div><h3>Cuentas registradas</h3><small>ADMIN puede consultar las cuentas. Solo OWNER suspende y cambia roles.</small></div></div><div class="admin-users-list" id="admin-users-list"></div><p class="admin-card-status" id="admin-users-status" role="status" aria-live="polite"></p></article>
         </section>
 
         <section class="admin-dashboard-section admin-section" id="games">
@@ -95,12 +96,17 @@
 
         <section class="admin-dashboard-section admin-section" id="moderation">
           <div class="admin-section-heading"><div><span class="admin-eyebrow">SEGURIDAD Y BIENESTAR</span><h2>Moderación</h2></div></div>
-          <article class="admin-panel-card admin-moderation-note"><span aria-hidden="true">🛡️</span><div><b>Moderación de cuentas locales</b><p>Suspende una cuenta desde Jugadores. La sesión se revoca en esta instalación. No se escanean rostros ni se envían datos a terceros.</p></div><button class="admin-outline-button" data-admin-jump="players" type="button">Ver cuentas →</button></article>
+          <article class="admin-panel-card admin-moderation-note"><span aria-hidden="true">🛡️</span><div><b>Seguridad y revisión</b><p>OWNER y ADMIN revisan las denuncias. Solo OWNER puede suspender cuentas o cambiar sus roles.</p></div><button class="admin-outline-button" data-admin-jump="reports" type="button">Revisar denuncias →</button></article>
+        </section>
+
+        <section class="admin-dashboard-section admin-section" id="reports">
+          <div class="admin-section-heading"><div><span class="admin-eyebrow">REPORTES DE LA COMUNIDAD</span><h2>Denuncias</h2></div><span class="admin-section-count" id="admin-report-count">0 pendientes</span></div>
+          <article class="admin-panel-card"><div class="admin-panel-title"><span>⚑</span><div><h3>Revisión de denuncias</h3><small>OWNER y ADMIN pueden revisar y actualizar el estado.</small></div></div><div class="admin-reports-list" id="admin-reports-list"></div><p class="admin-card-status" id="admin-reports-status" role="status" aria-live="polite"></p></article>
         </section>
 
         <section class="admin-dashboard-section admin-section" id="economy">
           <div class="admin-section-heading"><div><span class="admin-eyebrow">PROGRESO LOCAL</span><h2>Recompensas</h2></div></div>
-          <article class="admin-panel-card admin-economy-note"><span class="admin-detail-icon" aria-hidden="true">✦</span><div><b>Pasaporte y puntos</b><p>Las misiones y recompensas se guardan en el navegador del jugador. No se muestran cifras globales inventadas.</p></div><a class="admin-outline-button" href="/#pasaporte">Abrir pasaporte →</a></article>
+          <article class="admin-panel-card admin-global-reward-card"><div class="admin-panel-title"><span>🎁</span><div><h3>Regalo global de XP</h3><small>Se acredita en las cuentas registradas y aparece en su pasaporte.</small></div></div><div class="admin-global-reward-controls"><label for="admin-global-reward-amount">XP por cuenta<input id="admin-global-reward-amount" type="number" min="1" max="100000" step="1" value="100"></label><button class="admin-primary-button" id="admin-global-reward-send" type="button">Regalar a todos ✦</button></div><p class="admin-card-status" id="admin-global-reward-status" role="status" aria-live="polite"></p></article>
         </section>
 
         <section class="admin-dashboard-section admin-section" id="events">
@@ -109,17 +115,27 @@
             <article class="admin-panel-card">
               <div class="admin-panel-title"><span>⚡</span><div><h3>ADMIN ABUSE</h3><small>Activa manualmente una sesión</small></div></div>
               <label>Duración<select id="admin-event-duration"><option value="30">30 minutos</option><option value="60" selected>60 minutos</option><option value="90">90 minutos</option></select></label>
-              <label>Efecto<select id="admin-event-effect"><option value="confetti">Lluvia de confeti</option><option value="rainbow">Mundo arcoíris</option><option value="big-head">Cabezas grandes</option><option value="spotlight">Luces de fiesta</option><option value="low-gravity">Gravedad lunar</option><option value="super-speed">Supervelocidad</option><option value="giant">Modo gigante</option><option value="mini">Modo mini</option><option value="meteor">Lluvia de meteoros</option><option value="bouncy">Mundo saltarín</option><option value="ufo">Visita OVNI</option><option value="pet-parade">Desfile de mascotas</option><option value="reverse-gravity">Gravedad invertida</option><option value="party-chaos">Caos de fiesta</option><option value="points-rain">Lluvia de puntos</option></select></label>
+              <label>Efectos <small>Elige hasta cinco para combinarlos (Ctrl o ⌘ para marcar varios).</small><select id="admin-event-effect" multiple size="6"><option value="confetti">Lluvia de confeti</option><option value="rainbow">Mundo arcoíris</option><option value="big-head">Cabezas grandes</option><option value="spotlight">Luces de fiesta</option><option value="low-gravity">Gravedad lunar</option><option value="super-speed">Supervelocidad</option><option value="giant">Modo gigante</option><option value="mini">Modo mini</option><option value="meteor">Lluvia de meteoros</option><option value="bouncy">Mundo saltarín</option><option value="ufo">Visita OVNI</option><option value="pet-parade">Desfile de mascotas</option><option value="reverse-gravity">Gravedad invertida</option><option value="party-chaos">Caos de fiesta</option><option value="points-rain">Lluvia de puntos</option></select></label>
+              <label>Música del evento<select id="admin-event-music"><option value="Chasing_The_Spotlight.mp3">Chasing the Spotlight</option><option value="Baneo_Masivo.mp3">Baneo Masivo</option><option value="Beyond_The_Door.mp3">Beyond the Door</option><option value="Breaking_the_Cage.mp3">Breaking the Cage</option><option value="Rewrite_the_Scene.mp3">Rewrite the Scene</option></select></label>
               <p id="admin-active-event-description-copy">El aviso global de inicio aparece durante 10 segundos.</p>
               <div class="admin-actions"><button class="admin-primary-button" id="admin-event-run" type="button">Iniciar ahora ✦</button><button class="admin-secondary-button" id="admin-event-weekly" type="button">Pausar horario semanal</button></div>
               <p class="admin-card-status" id="admin-event-status" role="status" aria-live="polite">Cargando evento…</p>
             </article>
             <article class="admin-panel-card">
-              <div class="admin-panel-title"><span>📣</span><div><h3>Mensaje global</h3><small>El remitente siempre aparece como DANZOK</small></div></div>
+              <div class="admin-panel-title"><span>📣</span><div><h3>Mensaje global</h3><small>El remitente usa el nombre visible de la cuenta que publica.</small></div></div>
               <p>El aviso aparece 10 segundos en las páginas abiertas.</p>
               <label>Mensaje<textarea id="admin-announcement-body" maxlength="260" rows="4" placeholder="Escribe un mensaje para la comunidad…"></textarea></label>
               <div class="admin-actions"><button class="admin-primary-button" id="admin-announcement-publish" type="button">Publicar ↗</button><button class="admin-secondary-button" id="admin-announcement-clear" type="button">Retirar</button></div>
               <p class="admin-card-status" id="admin-announcement-status" role="status" aria-live="polite"></p>
+            </article>
+            <article class="admin-panel-card">
+              <div class="admin-panel-title"><span>🎉</span><div><h3>Eventos de temporada</h3><small>Activa varias celebraciones a la vez; cada una tiene tema, reto, música y duración.</small></div></div>
+              <label>Celebración<select id="admin-season-event"><option value="0">Enero · Día de Reyes Galáctico</option><option value="1">Febrero · Festival de corazones</option><option value="2">Marzo · Primavera de colores</option><option value="3">Abril · Búsqueda de huevos espaciales</option><option value="4">Mayo · Aventuras en familia</option><option value="5">Junio · Verano con palmeras</option><option value="6">Julio · Universo de verano</option><option value="7">Agosto · Regreso a la Academia</option><option value="8">Septiembre · Fiesta de México</option><option value="9">Octubre · Halloween de nebulosa</option><option value="10">Noviembre · Día de Muertos</option><option value="11">Diciembre · Navidad cósmica</option></select></label>
+              <label>Música<select id="admin-season-music"><option value="Chasing_The_Spotlight.mp3">Chasing the Spotlight</option><option value="Baneo_Masivo.mp3">Baneo Masivo</option><option value="Beyond_The_Door.mp3">Beyond the Door</option><option value="Breaking_the_Cage.mp3">Breaking the Cage</option><option value="Rewrite_the_Scene.mp3">Rewrite the Scene</option></select></label>
+              <p>La celebración cambia el fondo y el reto del mes, muestra un anuncio con el nombre del administrador por 10 segundos y deja activa su música.</p>
+              <div class="admin-actions"><button class="admin-primary-button" id="admin-season-launch" type="button">Lanzar celebración ✦</button></div>
+              <div id="admin-season-active-list" class="admin-season-active-list"><p class="admin-empty">No hay eventos de temporada activos.</p></div>
+              <p class="admin-card-status" id="admin-season-status" role="status" aria-live="polite"></p>
             </article>
           </div>
         </section>
@@ -141,26 +157,7 @@
           </article>
         </section>
 
-        <section class="admin-dashboard-section admin-section" id="ai">
-          <div class="admin-section-heading"><div><span class="admin-eyebrow">ASISTENTE LOCAL</span><h2>FUNSISTANT</h2></div><a class="admin-outline-button" href="http://127.0.0.1:9931/" target="_blank" rel="noopener noreferrer">Abrir servidor local ↗</a></div>
-          <div class="admin-settings-grid">
-            <article class="admin-panel-card">
-              <div class="admin-panel-title"><span>🤖</span><div><h3>Modelo y perfil</h3><small>Los perfiles cambian instrucciones. Los pesos GGUF se administran en assets.</small></div></div>
-              <label>Perfil<select id="admin-ai-profile"><option value="fun-1.0">FUN 1.0</option><option value="fun-2.1-universe">FUN 2.1 UNIVERSE</option></select></label><p id="admin-coder-model-status" class="admin-honesty-note">FUN-CODER 3.8 ASTRA usa pesos independientes y se carga por separado de FUNSISTANT.</p>
-              <label>Archivo GGUF<select id="admin-ai-model-file"></select></label>
-              <p id="admin-ai-config-note" class="admin-honesty-note">FUN 1.0 y FUN 2.1 son perfiles; para un modelo distinto hace falta otro archivo GGUF.</p>
-            </article>
-            <article class="admin-panel-card">
-              <div class="admin-panel-title"><span>✎</span><div><h3>Personalidad e instrucciones</h3><small>Se aplican a las próximas respuestas.</small></div></div>
-              <label for="admin-ai-instructions">Instrucciones de FUNSISTANT</label>
-              <textarea id="admin-ai-instructions" maxlength="24000" rows="10"></textarea>
-              <div class="admin-actions"><button class="admin-primary-button" id="admin-ai-save" type="button">Guardar instrucciones</button><button class="admin-secondary-button" id="admin-ai-apply" type="button">Guardar y cambiar modelo</button></div>
-              <p class="admin-card-status" id="admin-ai-save-status" role="status" aria-live="polite"></p>
-            </article>
-          </div>
-        </section>
-
-        <footer class="admin-section-heading"><a class="admin-back-link" href="/">← Volver a FUNVERSE</a><a class="admin-back-link" href="/chat.html">Abrir chat con FUNSISTANT →</a></footer>
+        <footer class="admin-section-heading"><a class="admin-back-link" href="/">← Volver a FUNVERSE</a></footer>
       </main>
     </div>
   </div>

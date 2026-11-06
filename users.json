@@ -1,0 +1,16 @@
+[
+  {
+    "email": "daniel.lopez.a@gmail.com",
+    "displayName": "DANIEL",
+    "salt": "8069fa04ce1d9b6d2d4a2aca68a70877",
+    "hash": "21c366ce228a22ac2bb4e9a1cfb2be64db5ba36f087488f6a1b88e5a4b80326743dd94284af060224a26866cf3990727f3a737a8ce62315fb6383da3877a7bcd",
+    "createdAt": "2026-11-06T15:18:40.415Z",
+    "role": "admin",
+    "banned": false,
+    "progress": {
+      "xp": 200160,
+      "updatedAt": "2026-11-06T17:09:18.356Z"
+    },
+    "roleUpdatedAt": "2026-11-06T16:52:18.852Z"
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "weeklyEnabled": true,
+  "durationMinutes": 60,
+  "effect": "party-chaos",
+  "manualEvent": null,
+  "announcement": null,
+  "announcementEventId": "2026-11-05T17:46:58.779Z",
+  "updatedAt": "2026-11-05T17:50:11.802Z",
+  "updatedBy": "jorge@albaitero.com"
+}

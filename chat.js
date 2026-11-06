@@ -1,168 +1,261 @@
-const chatHistoryKey = 'funverse-chat-history-v1';
-const chatForm = document.querySelector('#chat-form');
-const chatInput = document.querySelector('#chat-input');
-const chatSend = document.querySelector('#chat-send');
-const chatTranscript = document.querySelector('#chat-transcript');
-const chatMode = document.querySelector('#chat-mode');
-const chatStatus = document.querySelector('#chat-status');
-const chatSuggestions = document.querySelector('#chat-suggestions');
-let chatHistory = [];
-let chatBusy = false;
-let chatNotice = '';
-let announcementTimer = 0;
-let displayedAnnouncementId = '';
+const byId = (id) => document.getElementById(id);
+const chatLogin = byId('chat-login');
+const chatLayout = byId('chat-layout');
+const chatAccount = byId('chat-account-name');
+const friendForm = byId('friend-form');
+const friendEmail = byId('friend-email');
+const friendStatus = byId('friend-status');
+const friendList = byId('friend-list');
+const friendRequests = byId('friend-requests');
+const outgoingRequests = byId('outgoing-requests');
+const friendSearch = byId('friend-search');
+const chatEmpty = byId('chat-empty');
+const chatRoom = byId('chat-room');
+const chatMessages = byId('chat-messages');
+const messageForm = byId('message-form');
+const messageText = byId('message-text');
+const messageStatus = byId('message-status');
+const reportDialog = byId('report-dialog');
+const reportForm = byId('report-form');
+let signedInEmail = '';
+let activeFriend = null;
+let latestMessageId = '';
+let friendRefreshTimer = 0;
+let messageRefreshTimer = 0;
 
-try {
-  const coderPro = chatMode.querySelector('option[value="coder-pro"]');
-  const lessons = Math.min(4, Math.max(0, Number(localStorage.getItem('funverse-coding-lessons-v1')) || 0));
-  coderPro.disabled = lessons < 4;
-  coderPro.textContent = lessons === 4 ? 'FUN-CODER 3.8 ASTRA · desbloqueado' : 'FUN-CODER 3.8 ASTRA · Bloqueado';
-} catch {}
-
-try {
-  const saved = JSON.parse(localStorage.getItem(chatHistoryKey) || '[]');
-  if (Array.isArray(saved)) chatHistory = saved.filter((item) => item && ['user', 'assistant'].includes(item.role) && typeof item.content === 'string').slice(-12);
-} catch { chatHistory = []; }
-
-function saveChatHistory() {
-  try { localStorage.setItem(chatHistoryKey, JSON.stringify(chatHistory.slice(-12))); }
-  catch { chatNotice = 'El navegador no pudo guardar el historial local.'; }
+async function api(url, options = {}) {
+  const response = await fetch(url, { credentials: 'include', ...options });
+  let data = {};
+  try { data = await response.json(); } catch {}
+  if (!response.ok) throw new Error(data.error || `La solicitud falló (HTTP ${response.status}).`);
+  return data;
 }
 
-function addChatBubble(role, content, extraClass = '') {
-  const bubble = document.createElement('article');
-  bubble.className = `chat-message chat-message-${role} ${extraClass}`.trim();
-  const label = document.createElement('span');
-  label.className = 'chat-message-label';
-  label.textContent = role === 'user' ? 'TÚ' : 'FUNSISTANT';
-  const text = document.createElement('p');
-  text.textContent = content;
-  bubble.append(label, text);
-  return bubble;
+function showStatus(node, message, error = false) {
+  node.textContent = message;
+  node.dataset.state = error ? 'error' : 'ready';
 }
 
-function renderChat() {
-  const fragment = document.createDocumentFragment();
-  fragment.append(addChatBubble('assistant', '¡Hola! Soy FUNSISTANT. Estoy aquí para pensar contigo. ¿Qué hacemos hoy? ✨', 'chat-welcome'));
-  chatHistory.forEach((message) => fragment.append(addChatBubble(message.role, message.content)));
-  if (chatBusy) fragment.append(addChatBubble('assistant', 'Estoy pensando…', 'chat-thinking'));
-  if (chatNotice) fragment.append(addChatBubble('assistant', chatNotice, 'chat-warning'));
-  chatTranscript.replaceChildren(fragment);
-  chatTranscript.scrollTop = chatTranscript.scrollHeight;
-  chatSuggestions.hidden = chatHistory.some((message) => message.role === 'user');
+function avatarImage(src, alt = '') {
+  const image = document.createElement('img');
+  image.src = src || '/assets/funverse-astronaut.svg';
+  image.alt = alt;
+  image.loading = 'lazy';
+  image.addEventListener('error', () => { image.src = '/assets/funverse-astronaut.svg'; }, { once: true });
+  return image;
 }
 
-async function sendChatMessage(rawMessage) {
-  const content = rawMessage.trim();
-  if (!content || chatBusy) return;
-  chatNotice = '';
-  chatHistory.push({ role: 'user', content });
-  chatHistory = chatHistory.slice(-12);
-  saveChatHistory();
-  chatBusy = true;
-  chatSend.disabled = true;
-  renderChat();
+function personLabel(account) { return account?.displayName || account?.email?.split('@')[0] || 'Amigo'; }
+
+async function bootChat() {
   try {
-    const response = await fetch('/api/funsistant', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mode: chatMode.value, messages: chatHistory }),
-    });
-    let data;
-    try { data = await response.json(); }
-    catch { throw new Error('El servidor respondió con un formato inesperado.'); }
-    if (!response.ok) throw new Error(data.error || 'FUNSISTANT no pudo responder en este momento.');
-    if (typeof data.reply !== 'string' || !data.reply.trim()) throw new Error('FUNSISTANT no recibió una respuesta. Inténtalo otra vez.');
-    chatHistory.push({ role: 'assistant', content: data.reply.trim() });
-    chatHistory = chatHistory.slice(-12);
-    saveChatHistory();
-    chatStatus.textContent = 'Conectada y lista · FUN 2.1 UNIVERSE';
+    const auth = await api('/api/auth/status');
+    if (!auth.signedIn) {
+      chatAccount.textContent = 'Invitado';
+      chatLogin.hidden = false;
+      chatLayout.hidden = true;
+      return;
+    }
+    signedInEmail = auth.email;
+    chatAccount.textContent = auth.displayName || auth.email;
+    byId('chat-logout').hidden = false;
+    chatLogin.hidden = true;
+    chatLayout.hidden = false;
+    await loadFriends();
+    friendRefreshTimer = window.setInterval(() => { void loadFriends(); }, 12_000);
   } catch (error) {
-    chatNotice = error instanceof TypeError ? 'No encuentro el servidor local. Abre start-funverse.bat y vuelve a intentarlo.' : error.message;
-    chatStatus.textContent = 'FUNSISTANT no está disponible ahora.';
-  } finally {
-    chatBusy = false;
-    chatSend.disabled = false;
-    renderChat();
-    chatInput.focus();
+    chatAccount.textContent = 'Sin conexión';
+    chatLogin.hidden = false;
+    chatLayout.hidden = true;
+    chatLogin.querySelector('p').textContent = error.message || 'No pude conectar con FUNVERSE. Recarga la página.';
   }
 }
 
-chatForm.addEventListener('submit', (event) => {
+friendForm.addEventListener('submit', async (event) => {
   event.preventDefault();
-  const value = chatInput.value;
-  chatInput.value = '';
-  sendChatMessage(value);
+  const email = friendEmail.value.trim().toLowerCase();
+  const button = friendForm.querySelector('button');
+  button.disabled = true;
+  try {
+    const result = await api('/api/friends', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'request', email }) });
+    showStatus(friendStatus, result.message || 'Solicitud enviada.');
+    friendEmail.value = '';
+    await loadFriends();
+  } catch (error) { showStatus(friendStatus, error.message, true); }
+  finally { button.disabled = false; }
 });
 
-chatInput.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter' && !event.shiftKey) {
-    event.preventDefault();
-    chatForm.requestSubmit();
+friendRequests.addEventListener('click', async (event) => {
+  const button = event.target.closest('button[data-request-action]');
+  if (!button) return;
+  button.disabled = true;
+  try {
+    await api('/api/friends', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: button.dataset.requestAction, id: button.dataset.requestId }) });
+    await loadFriends();
+  } catch (error) { showStatus(friendStatus, error.message, true); button.disabled = false; }
+});
+
+function renderRequests(incoming, outgoing) {
+  friendRequests.replaceChildren();
+  byId('request-count').textContent = String(incoming.length);
+  if (!incoming.length) {
+    const empty = document.createElement('p'); empty.className = 'chat-list-empty'; empty.textContent = 'No hay solicitudes nuevas.'; friendRequests.append(empty);
   }
-});
+  for (const request of incoming) {
+    const card = document.createElement('article'); card.className = 'chat-request-card';
+    card.append(avatarImage(request.account.avatar));
+    const name = document.createElement('b'); name.textContent = personLabel(request.account);
+    const actions = document.createElement('div'); actions.className = 'chat-request-actions';
+    for (const [action, label] of [['accept', 'Aceptar'], ['decline', 'Ahora no']]) {
+      const button = document.createElement('button'); button.type = 'button'; button.dataset.requestAction = action; button.dataset.requestId = request.id; button.textContent = label;
+      actions.append(button);
+    }
+    card.append(name, actions); friendRequests.append(card);
+  }
+  outgoingRequests.replaceChildren();
+  outgoingRequests.hidden = outgoing.length === 0;
+  if (outgoing.length) {
+    const title = document.createElement('b'); title.textContent = 'Pendientes de respuesta'; outgoingRequests.append(title);
+    for (const request of outgoing) {
+      const line = document.createElement('small'); line.textContent = personLabel(request.account); outgoingRequests.append(line);
+    }
+  }
+}
 
-chatSuggestions.addEventListener('click', (event) => {
-  const button = event.target.closest('[data-prompt]');
-  if (button) sendChatMessage(button.dataset.prompt);
-});
-
-document.querySelector('#chat-clear').addEventListener('click', () => {
-  chatHistory = [];
-  chatNotice = '';
-  saveChatHistory();
-  renderChat();
-  chatInput.focus();
-});
-
-function renderChatAnnouncement(announcement) {
-  const banner = document.querySelector('#chat-announcement');
-  const body = document.querySelector('#chat-announcement-body');
-  const visible = Boolean(announcement && typeof announcement.body === 'string' && Date.parse(announcement.expiresAt) > Date.now());
-  if (!visible) {
-    banner.hidden = true;
-    displayedAnnouncementId = '';
-    window.clearTimeout(announcementTimer);
+function renderFriends(friends) {
+  friendList.replaceChildren();
+  byId('friend-count').textContent = String(friends.length);
+  const query = friendSearch.value.trim().toLocaleLowerCase();
+  const filtered = friends.filter((friend) => `${personLabel(friend)} ${friend.email}`.toLocaleLowerCase().includes(query));
+  if (!filtered.length) {
+    const empty = document.createElement('p'); empty.className = 'chat-list-empty'; empty.textContent = friends.length ? 'No encontré coincidencias.' : 'Agrega un amigo para empezar.'; friendList.append(empty);
     return;
   }
-  const id = announcement.publishedAt || announcement.expiresAt;
-  if (id === displayedAnnouncementId) return;
-  displayedAnnouncementId = id;
-  body.textContent = announcement.body;
-  banner.hidden = false;
-  banner.classList.add('announcement-show');
-  window.clearTimeout(announcementTimer);
-  announcementTimer = window.setTimeout(() => {
-    if (displayedAnnouncementId !== id) return;
-    banner.hidden = true;
-    banner.classList.remove('announcement-show');
-    displayedAnnouncementId = '';
-  }, Math.max(0, Date.parse(announcement.expiresAt) - Date.now()));
+  for (const friend of filtered) {
+    const button = document.createElement('button'); button.type = 'button'; button.className = 'chat-friend-button';
+    if (activeFriend?.email === friend.email) button.classList.add('is-active');
+    button.append(avatarImage(friend.avatar));
+    const copy = document.createElement('span'); copy.className = 'chat-friend-copy';
+    const name = document.createElement('b'); name.textContent = personLabel(friend);
+    const email = document.createElement('small'); email.textContent = friend.email;
+    copy.append(name, email); button.append(copy);
+    button.addEventListener('click', () => openConversation(friend));
+    friendList.append(button);
+  }
 }
 
-async function refreshChatEvents() {
+async function loadFriends() {
+  if (!signedInEmail) return;
   try {
-    const [eventResponse, announcementResponse] = await Promise.all([fetch('/api/events/status'), fetch('/api/announcement')]);
-    if (eventResponse.ok) {
-      const { weeklyEvent } = await eventResponse.json();
-      const live = document.querySelector('#chat-event-live');
-      live.hidden = !weeklyEvent?.active;
-      const effectNames = { confetti: 'LLUVIA DE CONFETI', rainbow: 'MUNDO ARCOÍRIS', 'big-head': 'CABEZAS GRANDES', spotlight: 'LUZ DE FIESTA', 'low-gravity': 'GRAVEDAD LUNAR', 'super-speed': 'SUPERVELOCIDAD', giant: 'MODO GIGANTE', mini: 'MODO MINI', meteor: 'LLUVIA DE METEOROS', bouncy: 'MUNDO SALTARÍN', ufo: 'VISITA OVNI', 'pet-parade': 'DESFILE DE MASCOTAS', 'reverse-gravity': 'GRAVEDAD INVERTIDA', 'party-chaos': 'CAOS DE FIESTA', 'points-rain': 'LLUVIA DE PUNTOS' };
-      const eventText = document.querySelector('#chat-event-text');
-      if (eventText) eventText.textContent = `ADMIN ABUSE EN VIVO · ${effectNames[weeklyEvent?.effect] || 'FIESTA'}`;
+    const data = await api('/api/friends');
+    renderRequests(data.incoming || [], data.outgoing || []);
+    renderFriends(data.friends || []);
+    if (activeFriend && !(data.friends || []).some((friend) => friend.email === activeFriend.email)) closeConversation();
+  } catch (error) { showStatus(friendStatus, error.message, true); }
+}
+
+function openConversation(friend) {
+  activeFriend = friend;
+  latestMessageId = '';
+  chatEmpty.hidden = true;
+  chatRoom.hidden = false;
+  byId('room-avatar').src = friend.avatar || '/assets/funverse-astronaut.svg';
+  byId('room-name').textContent = personLabel(friend);
+  byId('room-email').textContent = friend.email;
+  byId('report-target-label').textContent = `Tu denuncia sobre ${personLabel(friend)} será privada y llegará al panel de moderación.`;
+  renderFriendsFromCurrentSearch();
+  void loadMessages(true);
+  if (messageRefreshTimer) window.clearInterval(messageRefreshTimer);
+  messageRefreshTimer = window.setInterval(() => { void loadMessages(false); }, 3_000);
+  messageText.focus();
+}
+
+function renderFriendsFromCurrentSearch() { void loadFriends(); }
+
+function closeConversation() {
+  activeFriend = null;
+  chatRoom.hidden = true;
+  chatEmpty.hidden = false;
+  if (messageRefreshTimer) window.clearInterval(messageRefreshTimer);
+  messageRefreshTimer = 0;
+  renderFriendsFromCurrentSearch();
+}
+
+function renderMessages(messages, initial) {
+  const lastId = messages.at(-1)?.id || '';
+  if (!initial && lastId === latestMessageId) return;
+  chatMessages.replaceChildren();
+  let lastDay = '';
+  for (const message of messages) {
+    const date = new Date(message.createdAt);
+    const day = date.toLocaleDateString('es-MX', { day: 'numeric', month: 'short' });
+    if (day !== lastDay) {
+      const separator = document.createElement('div'); separator.className = 'chat-day-separator'; separator.textContent = day; chatMessages.append(separator); lastDay = day;
     }
-    if (announcementResponse.ok) renderChatAnnouncement((await announcementResponse.json()).announcement);
-  } catch { /* La conversación sigue disponible aunque fallen los avisos en vivo. */ }
+    const row = document.createElement('div'); row.className = `chat-message-row${message.from === signedInEmail ? ' is-mine' : ''}`;
+    const bubble = document.createElement('p'); bubble.className = 'chat-message-bubble'; bubble.textContent = message.text;
+    const time = document.createElement('time'); time.dateTime = date.toISOString(); time.textContent = date.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+    row.append(bubble, time); chatMessages.append(row);
+  }
+  if (!messages.length) {
+    const empty = document.createElement('p'); empty.className = 'chat-empty-messages'; empty.textContent = 'Aún no hay mensajes. ¡Saluda para empezar!'; chatMessages.append(empty);
+  }
+  latestMessageId = lastId;
+  chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-renderChat();
-void refreshChatEvents();
-window.setInterval(refreshChatEvents, 1_000);
-window.setInterval(async () => {
+async function loadMessages(initial) {
+  if (!activeFriend) return;
   try {
-    const response = await fetch('/api/status');
-    if (!response.ok) throw new Error('offline');
-    const status = await response.json();
-    chatStatus.textContent = status.modelReady ? `Conectada y lista · ${status.model}` : status.busy ? `FUNSISTANT está respondiendo · ${status.model}` : `${status.detail || 'FUNSISTANT está iniciando…'} · ${status.model}`;
-  } catch { chatStatus.textContent = 'No encuentro el servidor. Abre start-funverse.bat para conectar.'; }
-}, 20_000);
+    const data = await api(`/api/chat?with=${encodeURIComponent(activeFriend.email)}`);
+    renderMessages(data.messages || [], initial);
+    if (messageStatus.dataset.state === 'error') showStatus(messageStatus, 'Mensajes actualizados.');
+  } catch (error) { showStatus(messageStatus, error.message, true); }
+}
+
+messageForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  if (!activeFriend) return;
+  const text = messageText.value.trim();
+  if (!text) return;
+  const button = messageForm.querySelector('button');
+  button.disabled = true;
+  try {
+    await api('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ to: activeFriend.email, text }) });
+    messageText.value = '';
+    showStatus(messageStatus, 'Enviado.');
+    await loadMessages(false);
+  } catch (error) { showStatus(messageStatus, error.message, true); }
+  finally { button.disabled = false; messageText.focus(); }
+});
+
+friendSearch.addEventListener('input', () => { void loadFriends(); });
+byId('report-open').addEventListener('click', () => { if (activeFriend) reportDialog.showModal(); });
+byId('report-close').addEventListener('click', () => reportDialog.close());
+reportDialog.addEventListener('click', (event) => { if (event.target === reportDialog) reportDialog.close(); });
+reportForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  if (!activeFriend) return;
+  const button = reportForm.querySelector('button[type="submit"]');
+  button.disabled = true;
+  try {
+    await api('/api/reports', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: activeFriend.email, reason: byId('report-reason').value, details: byId('report-details').value.trim() }) });
+    showStatus(byId('report-status'), 'Denuncia enviada al panel de moderación.');
+    reportForm.reset();
+    window.setTimeout(() => reportDialog.close(), 900);
+  } catch (error) { showStatus(byId('report-status'), error.message, true); }
+  finally { button.disabled = false; }
+});
+
+byId('chat-logout').addEventListener('click', async () => {
+  const button = byId('chat-logout'); button.disabled = true;
+  try { await api('/api/auth/logout', { method: 'POST' }); window.location.reload(); }
+  catch (error) { chatAccount.textContent = error.message; button.disabled = false; }
+});
+
+window.addEventListener('pagehide', () => {
+  if (friendRefreshTimer) window.clearInterval(friendRefreshTimer);
+  if (messageRefreshTimer) window.clearInterval(messageRefreshTimer);
+});
+
+void bootChat();

@@ -1,0 +1,16 @@
+{
+  "email": "jorge@albaitero.com",
+  "salt": "3736ba901422fca2e343be66a63c07a6",
+  "hash": "c711fac9ee1babbcadec17f5f18607f4c28f122edc08381b0b1d04a824f59b3990c068827f00ca90763328249e930f8d5e26f63b6ef97b59013890cdee31622f",
+  "createdAt": "2026-11-05T01:03:13.520Z",
+  "twoFactor": {
+    "iv": "Bzes+gumzzRxmLRg",
+    "tag": "Y0+Fa+hdhQXaIkPdSRrFDw==",
+    "data": "2Cxg6vrtdYMK8nmFUTiEBQF6YgGIIOnwKJpjkd/gyGE="
+  },
+  "displayName": "DANZOK",
+  "progress": {
+    "xp": 100510,
+    "updatedAt": "2026-11-06T17:10:05.024Z"
+  }
+}
